@@ -2,9 +2,12 @@ import os
 import uuid
 
 from rllab.misc.instrument import run_experiment_lite
-from sac.misc.utils import timestamp
+# from sac.misc.utils import timestamp
 
-from sac.misc.utils import PROJECT_PATH
+# from sac.misc.utils import PROJECT_PATH
+from misc.utils import timestamp
+
+from misc.utils import PROJECT_PATH
 
 DEFAULT_LOG_DIR = PROJECT_PATH + "/data"
 
