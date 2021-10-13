@@ -4,7 +4,9 @@
 
 
 from rllab.core.serializable import Serializable
-from sac.misc.utils import PROJECT_PATH
+#from sac.misc.utils import PROJECT_PATH
+from misc.utils import PROJECT_PATH
+
 from rllab.envs.mujoco.half_cheetah_env import HalfCheetahEnv
 from rllab.envs.mujoco.mujoco_env import MujocoEnv
 from rllab.envs.base import Step

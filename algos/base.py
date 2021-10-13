@@ -6,9 +6,12 @@ import numpy as np
 from rllab.misc import logger
 from rllab.algos.base import Algorithm
 
-from sac.core.serializable import deep_clone
-from sac.misc import tf_utils
-from sac.misc.sampler import rollouts
+# from sac.core.serializable import deep_clone
+# from sac.misc import tf_utils
+# from sac.misc.sampler import rollouts
+from core.serializable import deep_clone
+from misc import tf_utils
+from misc.sampler import rollouts
 import pickle
 import tensorflow as tf
 import joblib

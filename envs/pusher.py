@@ -7,8 +7,10 @@ from rllab.envs.mujoco.mujoco_env import MujocoEnv
 from rllab.misc import logger
 from rllab.misc.overrides import overrides
 
-from sac.misc.utils import PROJECT_PATH
-MODELS_PATH = osp.abspath(osp.join(PROJECT_PATH, 'sac/mujoco_models'))
+#from sac.misc.utils import PROJECT_PATH
+from misc.utils import PROJECT_PATH
+#MODELS_PATH = osp.abspath(osp.join(PROJECT_PATH, 'sac/mujoco_models'))
+MODELS_PATH = osp.abspath(osp.join(PROJECT_PATH, 'mujoco_models'))
 import pickle
 
 class PusherEnv(MujocoEnv, Serializable):

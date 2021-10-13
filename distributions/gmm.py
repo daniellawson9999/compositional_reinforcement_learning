@@ -3,7 +3,9 @@
 import tensorflow as tf
 import numpy as np
 
-from sac.misc.mlp import mlp
+#from sac.misc.mlp import mlp
+from misc.mlp import mlp
+
 
 LOG_SIG_CAP_MAX = 2
 LOG_SIG_CAP_MIN = -20

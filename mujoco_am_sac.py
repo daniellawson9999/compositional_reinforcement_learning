@@ -7,25 +7,46 @@ import joblib
 from rllab.envs.normalized_env import normalize
 from rllab.misc.instrument import VariantGenerator
 from rllab import config
-from sac.misc import tf_utils
-from sac.algos import SAC
-from sac.envs import SimpleMazeAntEnv,RandomGoalAntEnv
-from sac.environments.pusher import PusherEnv
-from sac.envs import (
+# from sac.misc import tf_utils
+# from sac.algos import SAC
+from misc import tf_utils
+from algos import SAC
+
+#from sac.envs import SimpleMazeAntEnv,RandomGoalAntEnv
+from envs import SimpleMazeAntEnv, RandomGoalAntEnv
+#from sac.environments.pusher import PusherEnv
+from envs import PusherEnv
+# from sac.envs import (
+#     GymEnv,
+#     MultiDirectionSwimmerEnv,
+#     MultiDirectionAntEnv,
+#     MultiDirectionHumanoidEnv,
+#     CrossMazeAntEnv,
+# )
+from envs import (
     GymEnv,
     MultiDirectionSwimmerEnv,
     MultiDirectionAntEnv,
     MultiDirectionHumanoidEnv,
     CrossMazeAntEnv,
 )
-from sac.envs import HalfCheetahHurdleEnv
-from sac.misc.instrument import run_sac_experiment
-from sac.misc.utils import timestamp, unflatten
-from sac.policies import  UniformPolicy,GaussianPtrPolicy
-from sac.misc.sampler import SimpleSampler
-from sac.replay_buffers import SimpleReplayBuffer
-from sac.value_functions import NNQFunction, NNVFunction
-from sac.preprocessors import MLPPreprocessor
+#from sac.envs import HalfCheetahHurdleEnv
+from envs import HalfCheetahHurdleEnv
+# from sac.misc.instrument import run_sac_experiment
+# from sac.misc.utils import timestamp, unflatten
+# from sac.policies import  UniformPolicy,GaussianPtrPolicy
+# from sac.misc.sampler import SimpleSampler
+# from sac.replay_buffers import SimpleReplayBuffer
+# from sac.value_functions import NNQFunction, NNVFunction
+# from sac.preprocessors import MLPPreprocessor
+from misc.instrument import run_sac_experiment
+from misc.utils import timestamp, unflatten
+from policies import  UniformPolicy,GaussianPtrPolicy, GaussianGatPolicy
+from misc.sampler import SimpleSampler
+from replay_buffers import SimpleReplayBuffer
+from value_functions import NNQFunction, NNVFunction
+from preprocessors import MLPPreprocessor
+
 from examples.variants import parse_domain_and_task, get_variants
 import pickle
 ENVIRONMENTS = {
@@ -141,7 +162,8 @@ def run_experiment(variant):
     vf = NNVFunction(env_spec=env.spec, hidden_layer_sizes=(M, M))
 
     initial_exploration_policy = UniformPolicy(env_spec=env.spec)
-    policy=GaussianPtrPolicy(env_spec=env.spec,hidden_layer_sizes=(M,M),reparameterize=True,reg=1e-3,)
+    #policy=GaussianPtrPolicy(env_spec=env.spec,hidden_layer_sizes=(M,M),reparameterize=True,reg=1e-3,)
+    policy=GaussianGatPolicy(env_spec=env.spec,hidden_layer_sizes=(M,M),reparameterize=True,reg=1e-3,)
 
     algorithm = SAC(
         base_kwargs=base_kwargs,
@@ -189,7 +211,7 @@ def launch_experiments(args):
             terminate_machine=True,
             log_dir=args.log_dir,
             snapshot_mode='gap',
-            snapshot_gap=1000,
+            snapshot_gap=25,
             sync_s3_pkl=True,
         )
 

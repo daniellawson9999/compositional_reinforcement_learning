@@ -8,9 +8,13 @@ from rllab.misc.overrides import overrides
 from rllab.misc import logger
 from rllab.core.serializable import Serializable
 
-from sac.distributions import Normal 
-from sac.policies import NNPolicy
-from sac.misc import tf_utils
+# from sac.distributions import Normal 
+# from sac.policies import NNPolicy
+# from sac.misc import tf_utils
+
+from distributions import Normal 
+from policies import NNPolicy
+from misc import tf_utils
 
 EPS = 1e-6
 

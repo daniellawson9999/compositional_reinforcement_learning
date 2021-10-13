@@ -8,9 +8,12 @@ from rllab.misc.overrides import overrides
 from rllab.misc import logger
 from rllab.core.serializable import Serializable
 
-from sac.distributions import Normal 
-from sac.policies import NNPolicy2
-from sac.misc import tf_utils
+# from sac.distributions import Normal 
+# from sac.policies import NNPolicy2
+# from sac.misc import tf_utils
+from distributions import Normal 
+from policies import NNPolicy2
+from misc import tf_utils
 from rllab.misc import tensor_utils
 import time
 dis=tf.contrib.distributions
@@ -108,6 +111,7 @@ class GaussianPtrPolicy(NNPolicy2, Serializable):
 
 			self.f_encoding=tf.transpose(self.action_encodings[0],perm=[1,0,2])
 			self.b_encoding=tf.transpose(self.action_encodings[1],perm=[1,0,2])
+			
 			self.input_decoder=tf.concat([self._observations_ph,self.f_encoding[-1],self.b_encoding[-1]],axis=1)
 			self.decoder_output=decoder(self.input_decoder,layers=2,d_hidden=self.n_hiddens)
 
@@ -115,11 +119,12 @@ class GaussianPtrPolicy(NNPolicy2, Serializable):
 			self.Wref_b=tf.get_variable("Wref_b",[1,self.n_hiddens,self.n_hiddens], initializer=self.initializer)
 			self.Wd=tf.get_variable("Wd",[self.n_hiddens,self.n_hiddens], initializer=self.initializer)
 			self.v=tf.get_variable("v",[self.n_hiddens], initializer=self.initializer)
-
+			
 			self.We_f=tf.nn.conv1d(self.action_encodings[0],self.Wref_f,1,"VALID", name="We_f")
 			self.We_b=tf.nn.conv1d(self.action_encodings[1],self.Wref_b,1,"VALID", name="We_b")
 			self.Wd=tf.expand_dims(tf.matmul(self.decoder_output,self.Wd, name="Wd"),1)#linear(decoder_output, dout=hidden_size, name="Wd")			
 			self.scores=tf.reduce_sum(self.v*tf.tanh(self.We_f+self.We_b+self.Wd),[-1],name="scores") #BatchXseq_len
+			import pdb; pdb.set_trace()
 
 			self.sm_scores=tf.nn.softmax(self.scores/0.5,name="sm_scores") #BatchXseq_len
 			self.scores_index=tf.argmax(self.sm_scores,axis=1)	

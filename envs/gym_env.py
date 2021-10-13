@@ -8,6 +8,7 @@ import logging
 
 try:
     from gym import logger as monitor_logger
+    #import gym.logger as monitor_logger
 
     monitor_logger.setLevel(logging.WARNING)
 except Exception as e:

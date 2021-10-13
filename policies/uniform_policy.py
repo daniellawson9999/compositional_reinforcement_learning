@@ -1,7 +1,9 @@
 from rllab.core.serializable import Serializable
 
 from rllab.misc.overrides import overrides
-from sac.policies.base import Policy2
+#from sac.policies.base import Policy2
+from policies.base import Policy2
+
 
 import numpy as np
 

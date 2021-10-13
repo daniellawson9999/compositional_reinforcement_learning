@@ -4,8 +4,10 @@ from rllab.core.serializable import Serializable
 
 from sandbox.rocky.tf.core.parameterized import Parameterized
 
-from sac.misc.mlp import MLPFunction
-from sac.misc import tf_utils
+# from sac.misc.mlp import MLPFunction
+# from sac.misc import tf_utils
+from misc.mlp import MLPFunction
+from misc import tf_utils
 
 class MLPPreprocessor(MLPFunction):
     def __init__(self, env_spec, layer_sizes=(128, 16),

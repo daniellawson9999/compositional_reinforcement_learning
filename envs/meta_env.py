@@ -2,7 +2,8 @@ from rllab import spaces
 from rllab.core.serializable import Serializable
 from rllab.envs.env_spec import EnvSpec
 
-from sac.misc.utils import concat_obs_z
+#from sac.misc.utils import concat_obs_z
+from misc.utils import concat_obs_z
 
 import numpy as np
 

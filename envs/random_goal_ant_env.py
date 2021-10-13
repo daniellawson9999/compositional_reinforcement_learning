@@ -37,6 +37,7 @@ class RandomGoalAntEnv(AntEnv):
                  *args,
                  **kwargs):
         assert reward_type in REWARD_TYPES
+        #import pdb; pdb.set_trace()
 
         self._reward_type = reward_type
         self.terminate_at_goal = terminate_at_goal
