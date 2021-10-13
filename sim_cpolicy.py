@@ -10,6 +10,7 @@ from sac.envs import CrossMazeAntEnv, RandomGoalAntEnv,HalfCheetahHurdleEnv
 from rllab.envs.normalized_env import normalize
 from rllab.misc import tensor_utils
 from sac.misc import tf_utils
+import os
 
 def rollout(env, policy,sub_level_policies,path_length=1000, render=True, speedup=10, g=2):
 	observation = env.reset()
@@ -142,6 +143,7 @@ def simulate_policy_hch(args):
 				path = rollout(env, policy,sub_level_policies,path_length=args.max_path_length, g=2)
 
 if __name__ == "__main__":
+	os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 	args = parse_args()
 	if args.domain=='ant-cross-maze' or args.domain=='ant-random-goal':
 		simulate_policy_ant(args)

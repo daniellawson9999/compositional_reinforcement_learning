@@ -34,6 +34,7 @@ class RandomGoalAntEnv(AntEnv):
                  contact_cost_coeff=1e-3,
                  survive_reward=5e-2,
                  fixed_goal_position=None,
+                 set_goal_positions=None,
                  *args,
                  **kwargs):
         assert reward_type in REWARD_TYPES

@@ -81,7 +81,14 @@ def parse_args():
     parser.add_argument('--exp_name', type=str, default=timestamp())
     parser.add_argument('--mode', type=str, default='local')
     parser.add_argument('--log_dir', type=str, default=None)
+    parser.add_argument('--resume_from', type=str, default=None)
+    parser.add_argument("--primitives_list",type=str, default=None)
+    parser.add_argument("--goals_list", type=str, default=None)
+
     args = parser.parse_args()
+
+    if args.primitives_list is not None: args.primitives_list = args.primitives_list.split(',')
+    if args.goals_list is not None: args.goals_list = args.goals_list.split(',')
 
     return args
 
@@ -100,13 +107,31 @@ def run_experiment(variant):
     domain =None
     goal_size=None
     sub_level_policies_paths=[]
+    env_kwargs = {}
+
+    if args.goals_list:
+        env_kwargs['set_goal_positions'] = args.goals_list
+        print("Goals: ", args.goals_list)
+
     if args.domain=='ant-cross-maze':
         domain=CrossMazeAntEnv
         goal_size=2
-        sub_level_policies_paths.append("primitive-policies/ant/fwrd/fwrd.pkl")
-        sub_level_policies_paths.append("primitive-policies/ant/bwrd/bwrd.pkl")
-        sub_level_policies_paths.append("primitive-policies/ant/uwrd/uwrd.pkl")
-        sub_level_policies_paths.append("primitive-policies/ant/dwrd/dwrd.pkl")
+        if args.primitives_list is None:
+            sub_level_policies_paths.append("primitive-policies/ant/fwrd/fwrd.pkl") # forwards
+            sub_level_policies_paths.append("primitive-policies/ant/bwrd/bwrd.pkl") # backwards
+            sub_level_policies_paths.append("primitive-policies/ant/uwrd/uwrd.pkl") # left
+            sub_level_policies_paths.append("primitive-policies/ant/dwrd/dwrd.pkl") # right
+        else:
+            if 'forwards' in args.primitives_list:
+                sub_level_policies_paths.append("primitive-policies/ant/fwrd/fwrd.pkl")
+            if 'backwards' in args.primitives_list:
+                sub_level_policies_paths.append("primitive-policies/ant/bwrd/bwrd.pkl")
+            if 'left' in args.primitives_list:
+                sub_level_policies_paths.append("primitive-policies/ant/uwrd/uwrd.pkl")
+            if 'right' in args.primitives_list:
+                sub_level_policies_paths.append("primitive-policies/ant/dwrd/dwrd.pkl")
+
+            print("Primitive policy paths: ", sub_level_policies_paths)
     elif args.domain=='ant-random-goal':
         domain=RandomGoalAntEnv
         goal_size=2
@@ -128,7 +153,7 @@ def run_experiment(variant):
 
 
 
-    env = normalize(domain())#CrossMazeAntEnv())
+    env = normalize(domain(**env_kwargs))#CrossMazeAntEnv())
 
     pool = SimpleReplayBuffer(
         env_spec=env.spec,
@@ -147,7 +172,8 @@ def run_experiment(variant):
 
     base_kwargs = dict(
         epoch_length=1000,
-        n_epochs=5e3,
+        #n_epochs=5e3,
+        n_epochs=300,
         n_train_repeat=1,
         eval_render=False,
         eval_n_episodes=1,
@@ -201,6 +227,10 @@ def launch_experiments(args):
         experiment_prefix = 'ant/cross-maze' + '/' + args.exp_name
         experiment_name = '{prefix}-{exp_name}-{i:02}'.format(
             prefix='ant/cross-maze', exp_name=args.exp_name, i=0)
+        
+        kwargs = {}
+        if args.resume_from is not None:
+            kwargs["resume_from"] = args.resume_from
 
         run_sac_experiment(
             run_experiment,
@@ -213,6 +243,8 @@ def launch_experiments(args):
             snapshot_mode='gap',
             snapshot_gap=25,
             sync_s3_pkl=True,
+            **kwargs
+            #resume_from = args.resume_from
         )
 
 

@@ -33,11 +33,17 @@ class CrossMazeAntEnv(RandomGoalAntEnv, Serializable):
                  contact_cost_coeff=1e-3,
                  survive_reward=5e-2,
                  fixed_goal_position=None,
+                 set_goal_positions=None,
                  *args,
                  **kwargs):
+        
         file_path = self.__class__.FILE_PATH
         kwargs.pop('file_path', None)
         self.fixed_goal_position = fixed_goal_position
+
+        self.set_goal_positions = kwargs.pop('set_goal_positions', None)
+        if self.set_goal_positions is None:
+            self.set_goal_positions = set_goal_positions
 
         super(CrossMazeAntEnv, self).__init__(
             file_path=file_path,
@@ -56,7 +62,19 @@ class CrossMazeAntEnv(RandomGoalAntEnv, Serializable):
         self._serializable_initialized = False
 
     def reset(self, goal_position=None, *args, **kwargs):
-        possible_goal_positions = [[6, -6], [6, 6], [12, 0]]
+        if self.set_goal_positions is None:
+            possible_goal_positions = [[6, -6], [6, 6], [12, 0]]
+        else:
+            possible_goal_positions = []
+            if "left" in self.set_goal_positions:
+                possible_goal_positions.append([6, 6])
+            if "right" in self.set_goal_positions:
+                possible_goal_positions.append([6, -6])
+            if "forwards" in self.set_goal_positions:
+                possible_goal_positions.append([12, 0])
+        #import pdb; pdb.set_trace()
+
+        #possible_goal_positions = [[6, -6], [12, 0]] # Just right and forwards
 
         if goal_position is None:
             if self.fixed_goal_position is not None:
